@@ -1,0 +1,23 @@
+[project]
+name = "suraksha-desk-api"
+version = "0.1.0"
+description = "Suraksha Desk API - incident-centric backend for cyber incident assistance"
+requires-python = ">=3.10"
+
+dependencies = [
+  "fastapi==0.111.0",
+  "uvicorn[standard]==0.30.0",
+  "pydantic==2.7.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "httpx",
+]
+
+[tool.uvicorn]
+app = "app.main:app"
+host = "0.0.0.0"
+port = 8000
+reload = true
