@@ -3,7 +3,13 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException, status
 
-from .schemas import Incident, IncidentCreate, IncidentStatus
+from .schemas import (
+    ClassificationResult,
+    Incident,
+    IncidentCreate,
+    IncidentStatus,
+)
+from .services_classification import classify_incident
 
 router = APIRouter(prefix="/incidents", tags=["incidents"])
 
@@ -20,7 +26,7 @@ def create_incident(payload: IncidentCreate) -> Incident:
         status=IncidentStatus.draft,
         created_at=now,
         updated_at=now,
-        **payload.model_dump(),
+        **payload.dict(),
     )
     _incidents.append(incident)
     _next_id += 1
@@ -37,4 +43,16 @@ def get_incident(incident_id: int) -> Incident:
     for incident in _incidents:
         if incident.id == incident_id:
             return incident
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Incident not found")
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail="Incident not found"
+    )
+
+
+@router.post("/{incident_id}/classify", response_model=ClassificationResult)
+def classify_existing_incident(incident_id: int) -> ClassificationResult:
+    for incident in _incidents:
+        if incident.id == incident_id:
+            return classify_incident(incident)
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail="Incident not found"
+    )

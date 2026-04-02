@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -15,6 +15,20 @@ class IncidentStatus(str, Enum):
     draft = "draft"
     in_progress = "in_progress"
     completed = "completed"
+
+
+class RiskLevel(str, Enum):
+    low = "low"
+    medium = "medium"
+    high = "high"
+
+
+class ReportRoute(str, Enum):
+    chakshu_sanchar_saathi = "chakshu_sanchar_saathi"
+    ncrp = "ncrp"
+    helpline_1930 = "helpline_1930"
+    bank_support = "bank_support"
+    platform_support = "platform_support"
 
 
 class IncidentBase(BaseModel):
@@ -34,6 +48,12 @@ class Incident(IncidentBase):
     created_at: datetime
     updated_at: datetime
 
-    model_config = {
-        "from_attributes": True
-    }
+
+class ClassificationResult(BaseModel):
+    incident_id: int
+    incident_type: IncidentType
+    risk_level: RiskLevel
+    recommended_primary_route: ReportRoute
+    recommended_secondary_routes: List[ReportRoute] = []
+    immediate_actions: List[str] = []
+    reasoning: str
