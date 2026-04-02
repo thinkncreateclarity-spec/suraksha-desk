@@ -5,6 +5,5 @@ h11==0.16.0
 idna==3.11
 pydantic==1.10.14
 starlette==0.27.0
--e git+ssh://git@github.com/thinkncreateclarity-spec/suraksha-desk.git@4d1d6622c37420431ca1f915093f767fee3036be#egg=suraksha_desk_api&subdirectory=apps/api
 typing_extensions==4.15.0
 uvicorn==0.22.0
